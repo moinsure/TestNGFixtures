@@ -11,26 +11,17 @@ import java.util.function.Consumer
  * Responsible for running all the fixtures of the test methods and to allow
  * methods to query the result of the runs
  *
- * @author Itai Agmon
  */
 class FixtureManager private constructor(private val numberOfThreads: Int) {
     private val fixtureToMethodsMap: MutableMap<FixtureDetails, MutableList<Method>>
     private val methodToResultMap: MutableMap<Method, Future<FixtureRunResult>>
     private var allProcessIsDone = false
 
-    /**
-     * Singleton
-     */
     init {
         fixtureToMethodsMap = HashMap()
         methodToResultMap = HashMap()
     }
 
-    /**
-     * Add test methods with fixture annotation
-     *
-     * @param methods
-     */
     fun addMethods(methods: List<Method>) {
         methods.forEach(
             Consumer { method: Method ->
@@ -41,12 +32,7 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         )
     }
 
-    /**
-     * Add single test methods with fixture annotation
-     *
-     * @param method
-     */
-    fun addMethod(method: Method) {
+    private fun addMethod(method: Method) {
         requireNotNull(method.getAnnotation(WithFixture::class.java)) { "Can't add test method without Fixture" }
         val details = FixtureDetails(method)
         val methodList: MutableList<Method> = if (fixtureToMethodsMap.containsKey(details)) {
@@ -58,9 +44,6 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         fixtureToMethodsMap[details] = methodList
     }
 
-    /**
-     * Run in parallel all the setup methods methods of the fixtures.
-     */
     fun startFixtureSetupRuns() {
         if (fixtureToMethodsMap.isEmpty()) {
             return
@@ -168,21 +151,10 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         }
     }
 
-    /**
-     * Is the given method was added to the manager, had a fixture attached and the
-     * fixture was already executed. **The method will only return true if the
-     * method has fixture and the manager started to run the fixtures**
-     *
-     * @param method
-     * @return
-     */
-    fun isMethodHasFixture(method: Method): Boolean {
+    fun isMethodAndHasFixture(method: Method): Boolean {
         return methodToResultMap.containsKey(method)
     }
 
-    /**
-     * Wait for all the fixture runs to finish
-     */
     fun waitForAllFixtureSetupRunsToEnd() {
         if (allProcessIsDone) {
             return
@@ -201,19 +173,11 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         allProcessIsDone = true
     }
 
-    /**
-     * The result of a single fixture run
-     *
-     * @author Itai Agmon
-     */
     class FixtureRunResult {
-        /**
-         * True if the execution was successful and only if the execution was
-         * successful.
-         */
+
         private var status: Boolean = false
-        val throwable: Throwable?
-        val result: Any?
+        private val throwable: Throwable?
+        private val result: Any?
         private var fixture: Fixture? = null
         private var teardownScheduled = false
 
@@ -260,11 +224,6 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         }
     }
 
-    /**
-     * Holds the details of the fixture. Allows comparison between fixtures.
-     *
-     * @author Itai Agmon
-     */
     private class FixtureDetails(method: Method?) {
         private val fixtureClass: Class<out Fixture?>?
         val params: Array<String>?
@@ -302,9 +261,6 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
     companion object {
         private const val DEFAULT_NUMBER_OF_THREADS = 30
 
-        /**
-         * Singleton
-         */
         private var instance: FixtureManager? = null
         fun getInstance(numberOfThreads: Int): FixtureManager? {
             if (null == instance) {
