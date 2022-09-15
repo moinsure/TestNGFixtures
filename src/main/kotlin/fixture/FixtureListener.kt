@@ -1,14 +1,16 @@
 package fixture
 
 import org.testng.IMethodInstance
+import org.testng.IMethodInterceptor
 import org.testng.ISuite
+import org.testng.ISuiteListener
 import org.testng.ITestContext
 import org.testng.internal.ConstructorOrMethod
 import java.util.stream.Collectors
 
-class FixtureListener {
+class FixtureListener : IMethodInterceptor, ISuiteListener {
 
-    fun intercept(methods: List<IMethodInstance>, context: ITestContext?): List<IMethodInstance>? {
+    override fun intercept(methods: List<IMethodInstance>, context: ITestContext?): List<IMethodInstance> {
         val testMethodsWithFixture = methods.stream()
             .map { m: IMethodInstance ->
                 m.method.constructorOrMethod
@@ -24,9 +26,9 @@ class FixtureListener {
         return methods
     }
 
-    fun onFinish(suite: ISuite?) {
+    override fun onFinish(suite: ISuite?) {
         FixtureManager.getInstance()?.startFixtureTeardownRun()
     }
 
-    fun onStart(suite: ISuite?) {}
+    override fun onStart(suite: ISuite?) {}
 }

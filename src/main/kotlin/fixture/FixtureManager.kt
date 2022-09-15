@@ -70,16 +70,14 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         for (details in fixtureToMethodsMap.keys) {
             val future: Future<FixtureRunResult> = executor.submit(
                 Callable {
-                    var fixtureRunResult: FixtureRunResult? = null
+                    var fixtureRunResult: FixtureRunResult?
                     var fixtureObject: Fixture? = null
                     try {
                         fixtureObject = details.getFixtureClass()!!.newInstance()
                         val result: Any? = details.params?.let { fixtureObject?.setup(*it) }
                         fixtureRunResult = result?.let { FixtureRunResult(true, it) }
                         if (fixtureObject != null) {
-                            if (fixtureRunResult != null) {
-                                fixtureRunResult.setFixture(fixtureObject)
-                            }
+                            fixtureRunResult?.setFixture(fixtureObject)
                         }
                     } catch (t: Throwable) {
                         fixtureRunResult = FixtureRunResult(false, t)
@@ -189,7 +187,7 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         if (allProcessIsDone) {
             return
         }
-        var finished = true
+        var finished: Boolean
         do {
             try {
                 Thread.sleep(100)
@@ -288,16 +286,16 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
             hash = 31 * hash + (fixtureClass?.name?.hashCode() ?: 0)
             if (params != null) {
                 for (param in params) {
-                    hash = 31 * hash + (param?.hashCode() ?: 0)
+                    hash = 31 * hash + param.hashCode()
                 }
             }
             return hash
         }
 
-        override fun equals(o: Any?): Boolean {
-            if (this === o) return true
-            if (o == null) return false
-            return if (this.javaClass != o.javaClass) false else o.hashCode() == hashCode()
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null) return false
+            return if (this.javaClass != other.javaClass) false else other.hashCode() == hashCode()
         }
     }
 
