@@ -125,7 +125,7 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         ) {
             try {
                 Thread.sleep(100)
-            } catch (e: InterruptedException) {
+            } catch (_: InterruptedException) {
             }
         }
     }
@@ -133,8 +133,6 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
     /**
      * Get the fixture run result of a single test method.
      *
-     * @param method
-     * @return Fixture run result
      */
     fun getFixtureRunResult(method: Method): FixtureRunResult? {
         if (null == methodToResultMap[method]) {
@@ -181,7 +179,7 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
         private var fixture: Fixture? = null
         private var teardownScheduled = false
 
-        private constructor(status: Boolean, throwable: Throwable) : super() {
+        constructor(status: Boolean, throwable: Throwable) : super() {
             this.status = status
             this.throwable = throwable
             result = null
