@@ -197,12 +197,10 @@ class FixtureManager private constructor(private val numberOfThreads: Int) {
             return status
         }
 
-        @JvmName("getThrowable1")
         fun getThrowable(): Throwable? {
             return throwable
         }
 
-        @JvmName("getResult1")
         fun getResult(): Any? {
             return result
         }

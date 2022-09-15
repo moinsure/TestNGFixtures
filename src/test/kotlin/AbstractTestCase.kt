@@ -8,12 +8,13 @@ import java.lang.reflect.Method
 open class AbstractTestCase {
 
     var fixtureResult: Any? = null
+
     @BeforeMethod
     @Throws(Exception::class)
     fun setup(method: Method) {
         FixtureManager.getInstance()?.startFixtureSetupRuns()
         FixtureManager.getInstance()?.waitForAllFixtureSetupRunsToEnd()
-        if (!FixtureManager.getInstance()?.isMethodHasFixture(method)!!) {
+        if (!FixtureManager.getInstance()?.isMethodAndHasFixture(method)!!) {
             return
         }
         val runResult: FixtureManager.FixtureRunResult = FixtureManager.getInstance()?.getFixtureRunResult(method)!!
