@@ -42,6 +42,7 @@ publishing {
                 usage("java-runtime") {
                     fromResolutionResult()
                 }
+
             }
         }
     }
