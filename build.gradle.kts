@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("org.testng:testng:7.6.0")
+    compileOnly("org.testng:testng:7.6.0")
 }
 
 tasks.test {
