@@ -20,7 +20,7 @@ java {
 
 dependencies {
     testImplementation(kotlin("test"))
-    compileOnly("org.testng:testng:7.6.0")
+    compileOnly("org.testng:testng:7.5.0")
 }
 
 tasks.test {
