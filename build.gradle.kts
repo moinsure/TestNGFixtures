@@ -28,7 +28,7 @@ tasks.withType<KotlinCompile> {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("TestNGFixtures") {
             groupId = "org.tim-hepster.TestNGFixtures"
             artifactId = "TestNGFixtures"
             version = "1.0-SNAPSHOT"
@@ -46,4 +46,3 @@ publishing {
         }
     }
 }
-
