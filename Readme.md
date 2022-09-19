@@ -24,7 +24,7 @@ repositories {
  and 
 ```kotlin
 dependencies {
-    implementation 'com.github.tim-hepster:TestNGFixtures:208fcf8b31'
+    implementation 'com.github.moinsure:TestNGFixtures:1.0-SNAPSHOT'
 }
 ```
  to your `build.gradle` file. After this just rebuild your gradle project and you should be able to use it.
